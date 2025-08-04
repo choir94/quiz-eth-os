@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ethereum_OS Quiz</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --sea-blue: #1f7fa1;
+      --light-blue: #e8f6fc;
+      --white: #ffffff;
+      --silver: #c0c0c8;
+      --radius: 12px;
+      --shadow: 0 14px 40px -10px rgba(31,127,161,0.25);
+      --font: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    *{box-sizing:border-box;}
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--font);
+      background: linear-gradient(135deg, #f0f8fd 0%, #ffffff 60%);
+      color: #1f2d3a;
+      min-height: 100vh;
+    }
+    .container { max-width: 760px; margin: auto; }
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    h1 { margin: .2rem 0; font-size: 1.9rem; display: flex; align-items: center; gap: 12px; }
+    h2 { margin: .5rem 0; font-size: 1.4rem; }
+    .small { font-size: .85rem; color: #556677; margin: 6px 0 12px; }
+    .options { display: grid; gap: .65rem; margin-top: .5rem; }
+    .option-btn {
+      background: #f5fcff;
+      border: 1px solid var(--silver);
+      border-radius: 10px;
+      padding: .9rem;
+      cursor: pointer;
+      text-align: left;
+      font-size: 1rem;
+      transition: all .15s;
+      position: relative;
+    }
+    .option-btn:hover {
+      background: #e2f4fb;
+      box-shadow: 0 6px 20px rgba(31,127,161,0.1);
+    }
+    .btn {
+      padding: .65rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      display: inline-block;
+      transition: filter .2s;
+    }
+    .btn-primary {
+      background: var(--sea-blue);
+      color: white;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-secondary {
+      background: var(--silver);
+      color: #1f2d3a;
+    }
+    .btn-secondary:hover { filter: brightness(1.05); }
+    input[type=text] {
+      padding: .65rem;
+      border-radius: 8px;
+      border: 1px solid #dfe7ef;
+      width: 100%;
+      font-size: 1rem;
+      background: #f9fcff;
+    }
+    ol { padding-left: 1.25rem; margin: .5rem 0; }
+    .leaderboard-item { margin-bottom: .35rem; }
+    .footer {
+      font-size: .65rem;
+      text-align: center;
+      color: #637d99;
+      margin-top: 2rem;
+    }
+    .code-box {
+      background: #f0f9ff;
+      border: 1px dashed var(--sea-blue);
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin-top: 8px;
+      display: inline-block;
+      color: var(--sea-blue);
+      font-weight: 600;
+    }
+    .success { color: #0f6349; }
+    .logo { height: 52px; width: auto; }
+    .header-flex { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .badge { background: var(--light-blue); color: var(--sea-blue); padding: 4px 10px; border-radius: 999px; font-size: .65rem; display: inline-block; margin-right:4px; }
+    .leaderboard-wrapper { background: #f7fbfe; border: 1px solid #e3f0fa; border-radius: 10px; padding: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header-flex">
+        <img src="https://raw.githubusercontent.com/choir94/quiz-eth-os/main/Ethos.png" alt="EthOS Logo" class="logo" />
+        <div style="flex:1; min-width:220px;">
+          <div class="badge">Official EthOS</div>
+          <h1 style="margin:0;">Ethereum_OS Quick Quiz</h1>
+          <div class="small">Answer 5 questions correctly to get the access code. Based on EthOS lessons: definition, $AIR, launch, joining, and EOS rewards.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-area" class="card"></div>
+
+    <div class="card leaderboard-wrapper" id="leaderboard-card">
+      <h2 style="margin-top:0;">Leaderboard</h2>
+      <div id="leaderboard-list" class="small">No scores yet.</div>
+    </div>
+
+    <div class="footer">
+      Raw HTML – deploy anywhere (Vercel, GitHub Pages, static host). #EthereumOS<br>
+      Made by <a href="https://x.com/jepe999" target="_blank" style="color: var(--sea-blue); text-decoration: none;">@jepe999</a> on X
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      {
+        q: "What is Ethereum OS (EthOS)?",
+        o: [
+          "A centralized exchange",
+          "A decentralized operating system for Web3",
+          "A hardware wallet",
+          "A meme coin"
+        ],
+        a: "A decentralized operating system for Web3"
+      },
+      {
+        q: "What is the native utility token of Ethereum OS?",
+        o: ["ETH", "EOS", "$AIR", "BOOST"],
+        a: "$AIR"
+      },
+      {
+        q: "How was $AIR launched?",
+        o: [
+          "Through a venture capital sale",
+          "Via a fair airdrop with no VC involved",
+          "Only by staking EOS",
+          "By burning ETH"
+        ],
+        a: "Via a fair airdrop with no VC involved"
+      },
+      {
+        q: "Which is one way to join the EthOS ecosystem?",
+        o: [
+          "Only by owning Bitcoin",
+          "By creating a centralized account",
+          "By contributing as a builder or community member",
+          "By paying a subscription fee"
+        ],
+        a: "By contributing as a builder or community member"
+      },
+      {
+        q: "What reward do EOS holders get from trading volume in EthOS?",
+        o: [
+          "NFT drops",
+          "Pure ETH reflections",
+          "More $AIR codes automatically",
+          "Increased BOOST supply"
+        ],
+        a: "Pure ETH reflections"
+      }
+    ];
+
+    let current = 0, score = 0, finished = false;
+    const STORAGE_KEY = 'ethos_quiz_final_leaderboard';
+
+    function loadLeaderboard() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+    }
+    function saveLeaderboard(lb) { localStorage.setItem(STORAGE_KEY, JSON.stringify(lb)); }
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function renderLeaderboard() {
+      const lb = loadLeaderboard()
+        .sort((a,b) => b.score - a.score || new Date(a.date) - new Date(b.date))
+        .slice(0, 10);
+      const el = document.getElementById('leaderboard-list');
+      if (!lb.length) {
+        el.innerHTML = "No scores yet.";
+        return;
+      }
+      el.innerHTML = "<ol>" + lb.map(e => `<li class=\"leaderboard-item\"><strong>${escapeHtml(e.name)}</strong>: ${e.score}/5</li>`).join("") + "</ol>";
+    }
+
+    function renderQuiz() {
+      const area = document.getElementById('quiz-area');
+      if (!finished) {
+        const q = QUESTIONS[current];
+        const optionsHtml = q.o.map(opt => `<button class="option-btn" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`).join("");
+        area.innerHTML = `
+          <div class="small">Question ${current + 1} of ${QUESTIONS.length}</div>
+          <h2>${escapeHtml(q.q)}</h2>
+          <div class="options">${optionsHtml}</div>
+        `;
+        area.querySelectorAll('button.option-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const chosen = btn.getAttribute('data-opt');
+            if (chosen === q.a) score++;
+            if (current + 1 < QUESTIONS.length) {
+              current++;
+              renderQuiz();
+            } else {
+              finished = true;
+              renderQuiz();
+            }
+          });
+        });
+      } else {
+        let rewardHtml = '';
+        if (score === QUESTIONS.length) {
+          rewardHtml = `
+            <div class="card" style="border:1px solid var(--sea-blue);">
+              <h3 class="success" style="margin:0;">🎉 Perfect! Here is your access code:</h3>
+              <div class="code-box">ETHOS-ACCESS-2025</div>
+              <p class="small">Placeholder code—connect to your backend to issue real codes dynamically.</p>
+            </div>
+          `;
+        } else {
+          rewardHtml = `<p class="small">You got ${score}/${QUESTIONS.length}. Answer all correctly to receive the access code.</p>`;
+        }
+        area.innerHTML = `
+          <h2>Your Score: ${score}/${QUESTIONS.length}</h2>
+          ${rewardHtml}
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="name" placeholder="Your name for leaderboard" aria-label="Name for leaderboard" />
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn btn-primary" id="save">Save Score</button>
+              <button class="btn btn-secondary" id="retry">Try Again</button>
+            </div>
+          </div>
+        `;
+        document.getElementById('save').addEventListener('click', () => {
+          const name = document.getElementById('name').value.trim() || 'Anon';
+          const lb = loadLeaderboard();
+          lb.push({ name, score, date: new Date().toISOString() });
+          const updated = lb.sort((a,b) => b.score - a.score || new Date(a.date) - new Date(b.date)).slice(0,10);
+          saveLeaderboard(updated);
+          renderLeaderboard();
+          document.getElementById('save').disabled = true;
+        });
+        document.getElementById('retry').addEventListener('click', () => {
+          current = 0; score = 0; finished = false;
+          renderQuiz();
+        });
+      }
+    }
+
+    // initialize
+    renderLeaderboard();
+    renderQuiz();
+  </script>
+</body>
+</html>
